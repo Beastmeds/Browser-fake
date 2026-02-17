@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Browser</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #121212;
+      color: white;
+    }
+
+    /* URL-Leiste */
+    #urlBar {
+      display: flex;
+      padding: 10px;
+      background: linear-gradient(90deg, #1f1f1f, #2c2c2c);
+      align-items: center;
+      gap: 10px;
+    }
+
+    #urlInput {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: #333;
+      color: white;
+    }
+
+    #goButton {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #ff6f61;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #goButton:hover {
+      background: #ff4a3c;
+    }
+
+    /* Iframe */
+    #browserFrame {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: white;
+    }
+
+    /* Fehlermeldung wenn Seite nicht geladen werden kann */
+    #errorMessage {
+      display: none;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: #ff4a3c;
+      text-align: center;
+      padding: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="urlBar">
+    <input type="text" id="urlInput" placeholder="https://example.com">
+    <button id="goButton">Öffnen</button>
+  </div>
+
+  <iframe id="browserFrame"></iframe>
+  <div id="errorMessage">Diese Website kann nicht in diesem Mini-Browser geladen werden 😢</div>
+
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const goButton = document.getElementById('goButton');
+    const browserFrame = document.getElementById('browserFrame');
+    const errorMessage = document.getElementById('errorMessage');
+
+    function openWebsite() {
+      let url = urlInput.value.trim();
+      if (!url) return;
+
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+
+      // Testen ob die Website im iframe geladen werden kann
+      browserFrame.src = url;
+      browserFrame.onload = () => {
+        errorMessage.style.display = 'none';
+        browserFrame.style.display = 'block';
+      };
+      browserFrame.onerror = () => {
+        browserFrame.style.display = 'none';
+        errorMessage.style.display = 'flex';
+      };
+    }
+
+    goButton.addEventListener('click', openWebsite);
+    urlInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') openWebsite();
+    });
+  </script>
+
+</body>
+</html>
